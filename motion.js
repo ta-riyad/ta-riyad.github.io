@@ -14,12 +14,20 @@
   var collapsed = window.matchMedia('(max-width: ' + NAV_COLLAPSE + 'px)');
   var nav = document.querySelector('.navbar');
 
+  /* Shared with the nav code further down:
+     spyLocked  – while a nav click is scrolling, scroll-spy stays quiet so the pill
+                  goes straight to the clicked link instead of hopping through every section.
+     navSelect  – set once the nav exists; called by the anchor click handler. */
+  var spyLocked = false;
+  var navSelect = null;
+
   /* ---------- Eased anchor scrolling ---------- */
   var scrollRaf = 0;
   function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function cancelScroll() { if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = 0; } }
+  function stopScroll() { cancelScroll(); spyLocked = false; }
   ['wheel', 'touchstart', 'keydown'].forEach(function (ev) {
-    window.addEventListener(ev, cancelScroll, { passive: true });   // the user always wins
+    window.addEventListener(ev, stopScroll, { passive: true });   // the user always wins
   });
 
   function scrollToY(y, done) {
@@ -45,9 +53,11 @@
     var target = id ? document.getElementById(id) : null;
     if (!target && id) return;
     e.preventDefault();
+    if (navSelect) navSelect(id);                    // pill moves right away, scroll-spy waits
     var offset = nav ? nav.offsetHeight + 8 : 76;
     var y = id && id !== 'top' ? target.getBoundingClientRect().top + window.scrollY - offset : 0;
     scrollToY(y, function () {
+      spyLocked = false;
       if (history.replaceState) history.replaceState(null, '', id && id !== 'top' ? '#' + id : window.location.pathname + window.location.search);
       if (target) { if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); }
     });
@@ -119,6 +129,9 @@
     navItems.forEach(function (a) { a.removeAttribute('aria-current'); });
     if (link) link.setAttribute('aria-current', 'page');
   }
+  function keyboardFocus(el) {
+    try { return el.matches(':focus-visible'); } catch (err) { return true; }
+  }
 
   if (navList && navItems.length) {
     var pill = document.createElement('span');
@@ -127,36 +140,62 @@
     navList.appendChild(pill);
     var current = null;
 
+    /* Slides the pill under a link. The first time it appears (or re-appears after hiding)
+       it fades in at the target instead of flying across from the left edge. */
     var moveTo = function (link) {
       if (!link || collapsed.matches) { pill.classList.remove('is-on'); return; }
       var r = link.getBoundingClientRect();
       var p = navList.getBoundingClientRect();
-      pill.style.setProperty('--x', (r.left - p.left) + 'px');
-      pill.style.setProperty('--w', r.width + 'px');
-      pill.style.setProperty('--h', r.height + 'px');
+      var appearing = !pill.classList.contains('is-on');
+      if (appearing) pill.style.transition = 'opacity 320ms ease';
+      pill.style.setProperty('--x', Math.round(r.left - p.left) + 'px');
+      pill.style.setProperty('--w', Math.round(r.width) + 'px');
+      pill.style.setProperty('--h', Math.round(r.height) + 'px');
       pill.classList.add('is-on');
+      if (appearing) {
+        void pill.offsetWidth;                                   // commit the jump before motion returns
+        requestAnimationFrame(function () { pill.style.transition = ''; });
+      }
+    };
+
+    var byId = {};
+    navItems.forEach(function (a) { byId[(a.getAttribute('href') || '').replace(/^#/, '')] = a; });
+
+    /* Called by the anchor click handler. Nav targets (and the top of the page) win immediately;
+       other anchors are left to scroll-spy. */
+    navSelect = function (id) {
+      if (id && id !== 'top' && !byId[id]) return;
+      spyLocked = true;
+      var link = byId[id] || null;
+      if (link !== current) { current = link; setCurrent(link); moveTo(link); }
     };
 
     window.addEventListener('resize', function () { moveTo(current); });
+    if (collapsed.addEventListener) collapsed.addEventListener('change', function () { moveTo(current); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { moveTo(current); });
 
     if (fine) {
       navItems.forEach(function (link) {
         link.addEventListener('pointerenter', function () { moveTo(link); });
-        link.addEventListener('focus', function () { moveTo(link); });
       });
       navList.addEventListener('pointerleave', function () { moveTo(current); });
-      navList.addEventListener('focusout', function () { moveTo(current); });
     }
+    /* Keyboard users get the same glide as they tab through the links */
+    navItems.forEach(function (link) {
+      link.addEventListener('focus', function () { if (keyboardFocus(link)) moveTo(link); });
+    });
+    navList.addEventListener('focusout', function (e) {
+      if (e.relatedTarget && navList.contains(e.relatedTarget)) return;
+      moveTo(current);
+    });
 
-    var byId = {};
-    navItems.forEach(function (a) { byId[(a.getAttribute('href') || '').replace(/^#/, '')] = a; });
     var watched = Object.keys(byId).map(function (id) { return document.getElementById(id); }).filter(Boolean);
     var hero = document.getElementById('hero');
     if (hero) watched.push(hero);
 
     if (hasIO && watched.length) {
       var spy = new IntersectionObserver(function (entries) {
+        if (spyLocked) return;
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
           var match = byId[entry.target.id] || null;      // hero → no highlight
@@ -217,28 +256,6 @@
         btn.style.setProperty('--ty', '0px');
       });
     });
-
-    /* Hero rings drift gently with the pointer */
-    var heroEl = document.getElementById('hero');
-    if (heroEl) {
-      var hq = false, hx = 0, hy = 0;
-      heroEl.addEventListener('pointermove', function (e) {
-        var r = heroEl.getBoundingClientRect();
-        hx = ((e.clientX - r.left) / r.width - 0.5) * -26;
-        hy = ((e.clientY - r.top) / r.height - 0.5) * -20;
-        if (hq) return;
-        hq = true;
-        requestAnimationFrame(function () {
-          heroEl.style.setProperty('--px', hx.toFixed(1) + 'px');
-          heroEl.style.setProperty('--py', hy.toFixed(1) + 'px');
-          hq = false;
-        });
-      });
-      heroEl.addEventListener('pointerleave', function () {
-        heroEl.style.setProperty('--px', '0px');
-        heroEl.style.setProperty('--py', '0px');
-      });
-    }
   }
 
   /* ---------- Stat count-up ---------- */
