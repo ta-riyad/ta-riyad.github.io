@@ -1,463 +1,349 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Google tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-99TFL0CZMN"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-99TFL0CZMN');
-  </script>
+/* motion.js — interaction layer. The page stays fully readable without it.
+   Load with a plain <script src="motion.js"></script> just before </body>.
+   NAV_COLLAPSE must match the nav breakpoint in style.css. */
+(function () {
+  'use strict';
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Md Tahrim Kobir Riyad — Plant Stress Biology &amp; Computational Genomics</title>
-  <meta name="description" content="Portfolio of Md Tahrim Kobir Riyad, B.Sc. Agriculture (Hons.) student and Research Assistant at Sylhet Agricultural University, working on plant stress physiology, molecular biology and computational genomics.">
-  <meta name="author" content="Md Tahrim Kobir Riyad">
-  <meta name="theme-color" content="#095442">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Md Tahrim Kobir Riyad — Plant Stress Biology &amp; Computational Genomics">
-  <meta property="og:description" content="Research portfolio: plant stress physiology, molecular biology and bioinformatics. Sylhet Agricultural University, Bangladesh.">
-  <meta name="twitter:card" content="summary">
-  <link rel="icon" href="sau.png" type="image/png">
+  var NAV_COLLAPSE = 1000;
+  var root = document.documentElement;
+  root.classList.add('js');
 
-  <!-- Fonts (unchanged: Playfair Display + Inter) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..800;1,400..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body id="top">
+  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var hasIO = 'IntersectionObserver' in window;
+  var collapsed = window.matchMedia('(max-width: ' + NAV_COLLAPSE + 'px)');
+  var nav = document.querySelector('.navbar');
 
-  <!-- Icon sprite (one stroke style used everywhere) -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <defs>
-      <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/></symbol>
-      <symbol id="i-dna" viewBox="0 0 24 24"><path d="M2 15c6.7-6 13.3 0 20-6M9 22c1.8-2 2.5-4 2.8-6M15 2c-1.8 2-2.5 4-2.8 6M17 6l-2.5-2.5M14 8l-1-1M7 18l2.5 2.5M3.5 14.5l.5.5M20 9l.5.5M6.5 12.5l1 1M16.5 10.5l1 1M10 16l1.5 1.5"/></symbol>
-      <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
-      <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
-      <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
-      <symbol id="i-ext" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
-      <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
-      <symbol id="i-prev" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
-      <symbol id="i-next" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
-    </defs>
-  </svg>
+  /* ---------- Eased anchor scrolling ---------- */
+  var scrollRaf = 0;
+  function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function cancelScroll() { if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = 0; } }
+  ['wheel', 'touchstart', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, cancelScroll, { passive: true });   // the user always wins
+  });
 
-  <a class="skip" href="#main">Skip to content</a>
+  function scrollToY(y, done) {
+    cancelScroll();
+    var max = root.scrollHeight - window.innerHeight;
+    y = Math.max(0, Math.min(y, max));
+    var y0 = window.scrollY, d = y - y0;
+    if (calm || Math.abs(d) < 2) { window.scrollTo(0, y); if (done) done(); return; }
+    var dur = Math.min(1100, Math.max(450, Math.abs(d) * 0.4));
+    var t0 = performance.now();
+    (function step(now) {
+      var p = Math.min((now - t0) / dur, 1);
+      window.scrollTo(0, y0 + d * easeInOut(p));
+      if (p < 1) scrollRaf = requestAnimationFrame(step);
+      else { scrollRaf = 0; if (done) done(); }
+    })(t0);
+  }
 
-  <!-- 01. NAVIGATION -->
-  <header class="navbar">
-    <div class="nav-container">
-      <a href="#top" class="nav-brand">Tahrim K. Riyad</a>
-      <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
-      <nav aria-label="Primary">
-        <ul class="nav-links" id="navLinks">
-          <li><a href="#research">Research</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#conferences">Presentations</a></li>
-          <li><a href="#gallery">Fieldwork</a></li>
-          <li><a href="#skills">Methods</a></li>
-          <li><a href="#certifications">Certificates</a></li>
-          <li><a href="#affiliations">Community</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    var id = a.getAttribute('href').slice(1);
+    var target = id ? document.getElementById(id) : null;
+    if (!target && id) return;
+    e.preventDefault();
+    var offset = nav ? nav.offsetHeight + 8 : 76;
+    var y = id && id !== 'top' ? target.getBoundingClientRect().top + window.scrollY - offset : 0;
+    scrollToY(y, function () {
+      if (history.replaceState) history.replaceState(null, '', id && id !== 'top' ? '#' + id : window.location.pathname + window.location.search);
+      if (target) { if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); }
+    });
+  });
 
-  <main id="main">
+  /* ---------- Split headings into masked words ---------- */
+  document.querySelectorAll('[data-split]').forEach(function (el) {
+    if (el.children.length) return;
+    var words = el.textContent.trim().split(/\s+/);
+    if (!words[0]) return;
+    el.setAttribute('aria-label', words.join(' '));
+    el.textContent = '';
+    words.forEach(function (word, i) {
+      var mask = document.createElement('span');
+      mask.className = 'w';
+      mask.setAttribute('aria-hidden', 'true');
+      var inner = document.createElement('span');
+      inner.style.setProperty('--wi', i);
+      inner.textContent = word;
+      mask.appendChild(inner);
+      el.appendChild(mask);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+    });
+  });
 
-  <!-- 02. HERO -->
-  <section id="hero" class="hero">
-    <div class="container hero-grid">
-      <div class="hero-text">
-        <p class="hero-affil">Sylhet Agricultural University, Bangladesh</p>
-        <h1>Md Tahrim Kobir Riyad</h1>
-        <p class="subtitle">B.Sc. Agriculture (Hons.) Student &amp; Research Assistant</p>
-        <p class="bio">Interdisciplinary plant science researcher integrating experimental physiology and computational genomics to understand plant resilience to abiotic stress. Currently a Research Assistant at Sylhet Agricultural University, working in functional genomics, enzymatic kinetics, and structural bioinformatic modeling.</p>
-        <p class="direction">Seeking postgraduate research training in plant stress biology, functional genomics, and climate-resilient crop improvement.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#research">Explore My Research</a>
-          <a class="btn btn-ghost" href="#contact">Contact Me</a>
-        </div>
-      </div>
-      <div class="hero-image">
-        <img src="1000440301.jpg" alt="Portrait of Md Tahrim Kobir Riyad" class="profile-img" fetchpriority="high" decoding="async">
-      </div>
-    </div>
-    <div class="container">
-      <dl class="stats-row">
-        <div class="stat"><dt class="stat-label">Research assistantships</dt><dd class="stat-num" data-count="2">2</dd></div>
-        <div class="stat"><dt class="stat-label">Conference presentation</dt><dd class="stat-num" data-count="1">1</dd></div>
-        <div class="stat"><dt class="stat-label">Course certificates</dt><dd class="stat-num" data-count="13">13</dd></div>
-        <div class="stat"><dt class="stat-label">Society memberships</dt><dd class="stat-num" data-count="2">2</dd></div>
-      </dl>
-    </div>
-  </section>
+  /* ---------- Reveal on scroll ---------- */
+  var reveals = document.querySelectorAll('[data-reveal], [data-split]');
+  if (calm || !hasIO) {
+    reveals.forEach(function (el) { el.classList.add('is-visible'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+    reveals.forEach(function (el) { io.observe(el); });
+  }
 
-  <!-- 03. RESEARCH INTERESTS -->
-  <section id="research" class="section">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Research interests</h2>
-        <p class="section-subtext">Exploring plant resilience through integrated experimental and computational approaches.</p>
-      </div>
-      <div class="cards-grid">
-        <article class="card" data-reveal>
-          <span class="card-icon"><svg class="icon"><use href="#i-leaf"/></svg></span>
-          <h3>Plant Stress Physiology</h3>
-          <p>Designing and conducting seed germination and abiotic stress resilience experiments.</p>
-        </article>
-        <article class="card" data-reveal>
-          <span class="card-icon"><svg class="icon"><use href="#i-dna"/></svg></span>
-          <h3>Molecular Biology</h3>
-          <p>DNA extraction and biochemical assays for antioxidant enzymes and stress markers.</p>
-        </article>
-        <article class="card" data-reveal>
-          <span class="card-icon"><svg class="icon"><use href="#i-code"/></svg></span>
-          <h3>Bioinformatics &amp; Genomics</h3>
-          <p>Genome-wide identification, gene expression profiling, and structural predictions.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+  /* ---------- Navbar state, progress fallback, back-to-top ---------- */
+  var toTop = document.querySelector('.back-to-top');
+  var hasScrollTimeline = window.CSS && CSS.supports && CSS.supports('animation-timeline', 'scroll()');
+  var ticking = false;
 
-  <!-- 04. EXPERIENCE & EDUCATION -->
-  <section id="experience" class="section section-alt">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Research experience &amp; education</h2>
-        <p class="section-subtext">Most recent first. All three positions are ongoing.</p>
-      </div>
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var y = window.scrollY;
+      if (nav) nav.classList.toggle('is-stuck', y > 12);
+      if (toTop) toTop.classList.toggle('is-on', y > window.innerHeight * 0.6);
+      if (nav && !hasScrollTimeline) {
+        var max = root.scrollHeight - window.innerHeight;
+        nav.style.setProperty('--progress', max > 0 ? (y / max).toFixed(4) : 0);
+      }
+      ticking = false;
+    });
+  }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-      <ol class="timeline">
-        <li class="card timeline-card" data-reveal>
-          <div class="timeline-header">
-            <img src="sau.png" alt="Sylhet Agricultural University logo" class="logo logo-lg" width="48" height="48" loading="lazy">
-            <div class="timeline-title">
-              <h3>Research Assistant, Genetics Lab</h3>
-              <p class="timeline-sub">Sylhet Agricultural University</p>
-            </div>
-            <span class="date-badge">May 2026 – Present</span>
-          </div>
-          <p class="timeline-desc">Conducting gene family analysis and functional annotation using NCBI, TAIR, Phytozome, and AlphaFold.</p>
-          <dl class="meta">
-            <div><dt>Tools</dt><dd>NCBI, TAIR, Phytozome, AlphaFold</dd></div>
-            <div><dt>Status</dt><dd>Ongoing</dd></div>
-          </dl>
-          <div class="supervisor">
-            <span class="supervisor-icon"><svg class="icon"><use href="#i-user"/></svg></span>
-            <div>
-              <span class="supervisor-label">Principal Investigator</span>
-              <h4>Dr. Sayeda Sultana</h4>
-              <p>Professor · Department of Genetics and Plant Breeding</p>
-              <a href="mailto:sultana.gpb@sau.ac.bd">sultana.gpb@sau.ac.bd</a>
-            </div>
-          </div>
-        </li>
+  /* ---------- Gliding nav pill + scroll-spy ---------- */
+  var navList = document.querySelector('.nav-links');
+  var navItems = navList ? Array.prototype.slice.call(navList.querySelectorAll('a')) : [];
+  var toggle = document.querySelector('.nav-toggle');
 
-        <li class="card timeline-card" data-reveal>
-          <div class="timeline-header">
-            <img src="sau.png" alt="Sylhet Agricultural University logo" class="logo logo-lg" width="48" height="48" loading="lazy">
-            <div class="timeline-title">
-              <h3>Research Assistant, Agronomy Lab</h3>
-              <p class="timeline-sub">Sylhet Agricultural University</p>
-            </div>
-            <span class="date-badge">Feb 2025 – Present</span>
-          </div>
-          <p class="timeline-desc">Running molecular and biochemical techniques, instrument operation, and stress physiology experiments.</p>
-          <dl class="meta">
-            <div><dt>Status</dt><dd>Ongoing</dd></div>
-          </dl>
-          <div class="supervisor">
-            <span class="supervisor-icon"><svg class="icon"><use href="#i-user"/></svg></span>
-            <div>
-              <span class="supervisor-label">Principal Investigator</span>
-              <h4>Dr. Mozammel Hoque</h4>
-              <p>Professor · Department of Agronomy and Haor Agriculture</p>
-              <a href="mailto:hoquem.aha@sau.ac.bd">hoquem.aha@sau.ac.bd</a>
-            </div>
-          </div>
-        </li>
+  function setCurrent(link) {
+    navItems.forEach(function (a) { a.removeAttribute('aria-current'); });
+    if (link) link.setAttribute('aria-current', 'page');
+  }
 
-        <li class="card timeline-card" data-reveal>
-          <div class="timeline-header">
-            <img src="sau.png" alt="Sylhet Agricultural University logo" class="logo logo-lg" width="48" height="48" loading="lazy">
-            <div class="timeline-title">
-              <h3>B.Sc. in Agriculture (Hons.)</h3>
-              <p class="timeline-sub">Sylhet Agricultural University</p>
-            </div>
-            <span class="date-badge">Oct 2023 – Present</span>
-          </div>
-          <p class="timeline-desc">Studying plant physiology, crop science, genetics &amp; plant breeding, and agricultural statistics.</p>
-        </li>
-      </ol>
-    </div>
-  </section>
+  if (navList && navItems.length) {
+    var pill = document.createElement('span');
+    pill.className = 'nav-indicator';
+    pill.setAttribute('aria-hidden', 'true');
+    navList.appendChild(pill);
+    var current = null;
 
-  <!-- 05. CONFERENCE PRESENTATIONS -->
-  <section id="conferences" class="section">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Conference presentations</h2>
-      </div>
-      <article class="card pub-card" data-reveal>
-        <span class="status-tag">Oral presentation · 2026</span>
-        <h3>Influence of Nano Zinc Seed Priming on Germination of Rice Under Different pH Levels</h3>
-        <p class="pub-authors">Md Tahrim Kobir Riyad</p>
-        <p class="pub-venue">International Antalya Scientific Research and Innovative Studies Congress-X, Antalya, Türkiye</p>
-        <a href="https://drive.google.com/file/d/1w0agL8H3dA2c9hG_Z9crfbpQItA3BlPZ/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="view-link">View certificate <svg class="icon icon-sm"><use href="#i-ext"/></svg></a>
-      </article>
-    </div>
-  </section>
+    var moveTo = function (link) {
+      if (!link || collapsed.matches) { pill.classList.remove('is-on'); return; }
+      var r = link.getBoundingClientRect();
+      var p = navList.getBoundingClientRect();
+      pill.style.setProperty('--x', (r.left - p.left) + 'px');
+      pill.style.setProperty('--w', r.width + 'px');
+      pill.style.setProperty('--h', r.height + 'px');
+      pill.classList.add('is-on');
+    };
 
-  <!-- 06. FIELD & LABORATORY (CAROUSEL) -->
-  <section id="gallery" class="section section-alt">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Field &amp; laboratory work</h2>
-        <p class="section-subtext">Select an image to enlarge it.</p>
-      </div>
+    window.addEventListener('resize', function () { moveTo(current); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { moveTo(current); });
 
-      <div class="carousel" data-carousel role="region" aria-roledescription="carousel" aria-label="Field and laboratory photographs" data-reveal>
-        <div class="carousel-viewport">
-          <div class="carousel-track" aria-live="polite">
-            <figure class="carousel-slide" role="group" aria-roledescription="slide">
-              <button type="button" class="image-wrapper" aria-label="Enlarge image"><img src="rice.png" alt="Collecting agronomic data in a rice research plot" loading="lazy"></button>
-              <figcaption class="carousel-caption">Collecting agronomic data for the rice research project</figcaption>
-            </figure>
-            <figure class="carousel-slide" role="group" aria-roledescription="slide">
-              <button type="button" class="image-wrapper" aria-label="Enlarge image"><img src="adding%20buffer%20solution.png" alt="Adding buffer solution while preparing a biochemical assay" loading="lazy"></button>
-              <figcaption class="carousel-caption">Preparing biochemical assays by adding buffer solution</figcaption>
-            </figure>
-            <figure class="carousel-slide" role="group" aria-roledescription="slide">
-              <button type="button" class="image-wrapper" aria-label="Enlarge image"><img src="gringing%20the%20sample.png" alt="Grinding a plant tissue sample with liquid nitrogen" loading="lazy"></button>
-              <figcaption class="carousel-caption">Grinding plant tissue samples with liquid nitrogen for molecular analysis</figcaption>
-            </figure>
-            <figure class="carousel-slide" role="group" aria-roledescription="slide">
-              <button type="button" class="image-wrapper" aria-label="Enlarge image"><img src="centrifuging%20sample.png" alt="Centrifuging plant samples for enzyme extraction" loading="lazy"></button>
-              <figcaption class="carousel-caption">Centrifuging plant samples for enzyme extraction</figcaption>
-            </figure>
-            <figure class="carousel-slide" role="group" aria-roledescription="slide">
-              <button type="button" class="image-wrapper" aria-label="Enlarge image"><img src="chili%20physiological%20data.png" alt="Recording physiological growth data from chili plants" loading="lazy"></button>
-              <figcaption class="carousel-caption">Recording physiological growth data from chili plants</figcaption>
-            </figure>
-            <figure class="carousel-slide" role="group" aria-roledescription="slide">
-              <button type="button" class="image-wrapper" aria-label="Enlarge image"><img src="measuring%20chlorophile%20content%20on%20chili%20leaf.png" alt="Measuring chlorophyll content on a chili leaf" loading="lazy"></button>
-              <figcaption class="carousel-caption">Measuring non-destructive chlorophyll content on chili leaves</figcaption>
-            </figure>
-          </div>
-        </div>
-        <div class="carousel-controls">
-          <button type="button" class="carousel-btn prev-btn" aria-label="Previous image"><svg class="icon"><use href="#i-prev"/></svg></button>
-          <div class="carousel-dots" role="group" aria-label="Choose image"></div>
-          <button type="button" class="carousel-btn next-btn" aria-label="Next image"><svg class="icon"><use href="#i-next"/></svg></button>
-        </div>
-      </div>
-    </div>
-  </section>
+    if (fine) {
+      navItems.forEach(function (link) {
+        link.addEventListener('pointerenter', function () { moveTo(link); });
+        link.addEventListener('focus', function () { moveTo(link); });
+      });
+      navList.addEventListener('pointerleave', function () { moveTo(current); });
+      navList.addEventListener('focusout', function () { moveTo(current); });
+    }
 
-  <!-- 07. METHODS & TOOLS -->
-  <section id="skills" class="section">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Research methods &amp; tools</h2>
-      </div>
-      <div class="skills-grid">
-        <article class="card skill-group" data-reveal>
-          <h3>Laboratory &amp; physiology</h3>
-          <div class="tags">
-            <span class="tag">Seed germination</span>
-            <span class="tag">Abiotic stress experiments</span>
-            <span class="tag">Plant physiological measurements</span>
-            <span class="tag">Biochemical assays</span>
-            <span class="tag">Antioxidant-related measurements</span>
-            <span class="tag">UV–Vis spectrophotometry</span>
-          </div>
-        </article>
-        <article class="card skill-group" data-reveal>
-          <h3>Molecular biology</h3>
-          <div class="tags">
-            <span class="tag">DNA extraction</span>
-          </div>
-        </article>
-        <article class="card skill-group" data-reveal>
-          <h3>Genomics &amp; bioinformatics</h3>
-          <div class="tags">
-            <span class="tag">Gene family identification</span>
-            <span class="tag">Functional annotation</span>
-            <span class="tag">Gene expression analysis</span>
-            <span class="tag">Phylogenetics</span>
-            <span class="tag">Genomic mining</span>
-            <span class="tag">Protein structure prediction</span>
-          </div>
-        </article>
-        <article class="card skill-group" data-reveal>
-          <h3>Software &amp; databases</h3>
-          <div class="tags">
-            <span class="tag">R</span>
-            <span class="tag">Python</span>
-            <span class="tag">NCBI / BLAST</span>
-            <span class="tag">TAIR</span>
-            <span class="tag">Phytozome</span>
-            <span class="tag">MEGA / PhyloSuite</span>
-            <span class="tag">TBtools</span>
-            <span class="tag">MEME</span>
-            <span class="tag">AlphaFold</span>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
+    var byId = {};
+    navItems.forEach(function (a) { byId[(a.getAttribute('href') || '').replace(/^#/, '')] = a; });
+    var watched = Object.keys(byId).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    var hero = document.getElementById('hero');
+    if (hero) watched.push(hero);
 
-  <!-- 08. CERTIFICATIONS -->
-  <section id="certifications" class="section section-alt">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Certifications &amp; academic development</h2>
-        <p class="section-subtext">Completed online and short courses. Each entry opens the issuer's verification page.</p>
-      </div>
+    if (hasIO && watched.length) {
+      var spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var match = byId[entry.target.id] || null;      // hero → no highlight
+          if (match === current) return;
+          current = match;
+          setCurrent(current);
+          moveTo(current);
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      watched.forEach(function (s) { spy.observe(s); });
+    }
+  }
 
-      <div class="cert-groups">
-        <div class="cert-group" data-reveal>
-          <h3>Bioinformatics &amp; genomics</h3>
-          <ul class="cert-list">
-            <li><a href="https://coursera.org/verify/specialization/HGBR5II0ZXTR" target="_blank" rel="noopener noreferrer"><img src="toronto.png" alt="University of Toronto" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Plant Bioinformatics Methods Specialization</span><span class="cert-org">University of Toronto</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://coursera.org/verify/MF1DCKLEVWN6" target="_blank" rel="noopener noreferrer"><img src="peking.png" alt="Peking University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Bioinformatics: Introduction and Methods</span><span class="cert-org">Peking University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://coursera.org/verify/Q7SYCHYGGV32" target="_blank" rel="noopener noreferrer"><img src="melbourn.png" alt="University of Melbourne" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Epigenetic Control of Gene Expression</span><span class="cert-org">University of Melbourne</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://coursera.org/verify/0VITF6QO0DKA" target="_blank" rel="noopener noreferrer"><img src="jons%20hop.png" alt="Johns Hopkins University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Python for Genomic Data Science</span><span class="cert-org">Johns Hopkins University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-          </ul>
-        </div>
+  /* ---------- Mobile menu ---------- */
+  if (toggle && navList) {
+    var setMenu = function (open) {
+      navList.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    };
+    toggle.addEventListener('click', function () { setMenu(!navList.classList.contains('open')); });
+    navList.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && navList.classList.contains('open')) { setMenu(false); toggle.focus(); }
+    });
+    document.addEventListener('click', function (e) {
+      if (navList.classList.contains('open') && !e.target.closest('.navbar')) setMenu(false);
+    });
+    if (collapsed.addEventListener) collapsed.addEventListener('change', function () { setMenu(false); });
+  }
 
-        <div class="cert-group" data-reveal>
-          <h3>Plant science &amp; agriculture</h3>
-          <ul class="cert-list">
-            <li><a href="https://coursera.org/verify/2HH0FH8TCZOW" target="_blank" rel="noopener noreferrer"><img src="western%20aus.png" alt="University of Western Australia" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Agriculture, Economics and Nature</span><span class="cert-org">University of Western Australia</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/verify/U71E94TLLWNG" target="_blank" rel="noopener noreferrer"><img src="florida.png" alt="University of Florida" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Sustainable Agricultural Land Management</span><span class="cert-org">University of Florida</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/verify/YIW4VE21AW97" target="_blank" rel="noopener noreferrer"><img src="tel%20aviv.png" alt="Tel Aviv University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Understanding Plants – Part I</span><span class="cert-org">Tel Aviv University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/verify/7F1EX5JGEYSR" target="_blank" rel="noopener noreferrer"><img src="copen.png" alt="University of Copenhagen" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Transformation of the Global Food System</span><span class="cert-org">University of Copenhagen</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://academy.cabi.org/mod/customcert/verify_certificate.php?code=I40VVTRWMD&amp;qrcode=1" target="_blank" rel="noopener noreferrer"><img src="CABI.png" alt="CABI" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Integrated Pest Management (IPM) Fundamentals</span><span class="cert-org">CABI Academy</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-          </ul>
-        </div>
+  /* ---------- Pointer touches (fine pointers, motion allowed) ---------- */
+  if (fine && !calm) {
+    /* Soft light that follows the cursor across cards */
+    document.querySelectorAll('.card').forEach(function (card) {
+      var queued = false, ev = null;
+      card.addEventListener('pointermove', function (e) {
+        ev = e;
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(function () {
+          var r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (ev.clientX - r.left).toFixed(0) + 'px');
+          card.style.setProperty('--my', (ev.clientY - r.top).toFixed(0) + 'px');
+          queued = false;
+        });
+      });
+    });
 
-        <div class="cert-group" data-reveal>
-          <h3>Data science &amp; programming</h3>
-          <ul class="cert-list">
-            <li><a href="https://certificates.cs50.io/eab072f5-d643-4126-bee1-c4f595328223.pdf?size=letter" target="_blank" rel="noopener noreferrer"><img src="harvard.png" alt="Harvard University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">CS50's Introduction to Programming with Python</span><span class="cert-org">Harvard University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://coursera.org/verify/specialization/7M0WBO119F3P" target="_blank" rel="noopener noreferrer"><img src="duke.png" alt="Duke University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Data Analysis with R Specialization</span><span class="cert-org">Duke University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/certificate/USCDNT8QWXCT" target="_blank" rel="noopener noreferrer"><img src="michigan.png" alt="University of Michigan" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Applied Machine Learning in Python</span><span class="cert-org">University of Michigan</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/verify/15VKXLRCIYAI" target="_blank" rel="noopener noreferrer"><img src="IBM.png" alt="IBM" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Python for Data Science, AI &amp; Development</span><span class="cert-org">IBM</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+    /* Buttons lean a few pixels toward the cursor */
+    document.querySelectorAll('.btn').forEach(function (btn) {
+      btn.addEventListener('pointermove', function (e) {
+        var r = btn.getBoundingClientRect();
+        btn.style.setProperty('--tx', (((e.clientX - r.left) / r.width - 0.5) * 8).toFixed(1) + 'px');
+        btn.style.setProperty('--ty', (((e.clientY - r.top) / r.height - 0.5) * 6).toFixed(1) + 'px');
+      });
+      btn.addEventListener('pointerleave', function () {
+        btn.style.setProperty('--tx', '0px');
+        btn.style.setProperty('--ty', '0px');
+      });
+    });
 
-  <!-- 09. AFFILIATIONS & LEADERSHIP -->
-  <section id="affiliations" class="section">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Affiliations &amp; leadership</h2>
-        <p class="section-subtext">Professional memberships and voluntary service.</p>
-      </div>
+    /* Hero rings drift gently with the pointer */
+    var heroEl = document.getElementById('hero');
+    if (heroEl) {
+      var hq = false, hx = 0, hy = 0;
+      heroEl.addEventListener('pointermove', function (e) {
+        var r = heroEl.getBoundingClientRect();
+        hx = ((e.clientX - r.left) / r.width - 0.5) * -26;
+        hy = ((e.clientY - r.top) / r.height - 0.5) * -20;
+        if (hq) return;
+        hq = true;
+        requestAnimationFrame(function () {
+          heroEl.style.setProperty('--px', hx.toFixed(1) + 'px');
+          heroEl.style.setProperty('--py', hy.toFixed(1) + 'px');
+          hq = false;
+        });
+      });
+      heroEl.addEventListener('pointerleave', function () {
+        heroEl.style.setProperty('--px', '0px');
+        heroEl.style.setProperty('--py', '0px');
+      });
+    }
+  }
 
-      <h3 class="group-title" data-reveal>Professional memberships</h3>
-      <div class="cards-grid">
-        <article class="card affil-card" data-reveal>
-          <div class="affil-header">
-            <img src="ASPB.png" alt="American Society of Plant Biologists logo" class="logo logo-lg" width="56" height="56" loading="lazy">
-            <div><h4>American Society of Plant Biologists</h4><span class="status-tag">Active member</span></div>
-          </div>
-          <p class="affil-desc">Professional society dedicated to promoting the growth and development of plant biology, molecular genetics, and plant research worldwide.</p>
-          <div class="affil-links"><a href="https://aspb.org/" target="_blank" rel="noopener noreferrer" class="view-link">Official website <svg class="icon icon-sm"><use href="#i-ext"/></svg></a></div>
-        </article>
-        <article class="card affil-card" data-reveal>
-          <div class="affil-header">
-            <img src="APS.png" alt="American Phytopathological Society logo" class="logo logo-lg" width="56" height="56" loading="lazy">
-            <div><h4>American Phytopathological Society</h4><span class="status-tag">Active member</span></div>
-          </div>
-          <p class="affil-desc">International scientific organization focused on plant health, plant pathology research, and crop protection against biotic and abiotic stressors.</p>
-          <div class="affil-links">
-            <a href="https://www.apsnet.org/" target="_blank" rel="noopener noreferrer" class="view-link">Official website <svg class="icon icon-sm"><use href="#i-ext"/></svg></a>
-            <a href="https://badgecert.com/bc/html/show-badge.html?b=zfzvucqd" target="_blank" rel="noopener noreferrer" class="view-link">Verify badge <svg class="icon icon-sm"><use href="#i-ext"/></svg></a>
-          </div>
-        </article>
-      </div>
+  /* ---------- Stat count-up ---------- */
+  function countUp(el) {
+    var raw = el.getAttribute('data-count');
+    var end = parseFloat(raw);
+    if (isNaN(end)) return;
+    var suffix = el.getAttribute('data-suffix') || '';
+    var decimals = (raw.split('.')[1] || '').length;
+    if (calm) { el.textContent = end.toFixed(decimals) + suffix; return; }
+    var t0 = performance.now();
+    (function step(now) {
+      var p = Math.min((now - t0) / 1300, 1);
+      el.textContent = (end * (1 - Math.pow(1 - p, 4))).toFixed(decimals) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  var counters = document.querySelectorAll('[data-count]');
+  if (hasIO && !calm) {
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        countUp(entry.target);
+        co.unobserve(entry.target);
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function (el) { co.observe(el); });
+  }
 
-      <h3 class="group-title" id="leadership" data-reveal>Voluntary experience</h3>
-      <div class="cards-grid">
-        <article class="card affil-card" data-reveal>
-          <div class="affil-header">
-            <img src="bd-scout-logo.png" alt="Bangladesh Scouts logo" class="logo logo-lg" width="56" height="56" loading="lazy">
-            <div><h4>Bangladesh Scouts</h4><span class="status-tag">Scout member · 2015 – 2020</span></div>
-          </div>
-          <p class="affil-desc">Participated in youth development rallies, community service drives, outdoor survival camps, and team leadership workshops.</p>
-        </article>
-        <article class="card affil-card" data-reveal>
-          <div class="affil-header">
-            <img src="red-crescent-logo.png" alt="Bangladesh Red Crescent Society logo" class="logo logo-lg" width="56" height="56" loading="lazy">
-            <div><h4>Bangladesh Red Crescent Society</h4><span class="status-tag">Youth volunteer · 2015 – 2020</span></div>
-          </div>
-          <p class="affil-desc">Engaged in first-aid response training, voluntary blood donation campaigns, health awareness drives, and disaster relief initiatives.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+  /* ---------- Gallery + lightbox ---------- */
+  var items = Array.prototype.slice.call(document.querySelectorAll('.gallery-item'));
 
-  <!-- 10. CONTACT -->
-  <section id="contact" class="section contact-section">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Contact &amp; academic links</h2>
-        <p class="section-subtext">Open to research collaborations, academic discussions, and graduate opportunities.</p>
-      </div>
-      <ul class="contact-grid">
-        <li data-reveal><a class="contact-row" href="mailto:tahrim.ag@student.sau.ac.bd">
-          <span class="contact-icon"><img src="gmail.png" alt="" width="28" height="28" loading="lazy"></span>
-          <span class="contact-info"><span class="contact-label">Email</span><span class="contact-value">tahrim.ag@student.sau.ac.bd</span></span></a></li>
-        <li data-reveal><a class="contact-row" href="tel:+8801305581682">
-          <span class="contact-icon"><svg class="icon"><use href="#i-phone"/></svg></span>
-          <span class="contact-info"><span class="contact-label">Phone</span><span class="contact-value">+880 1305 581682</span></span></a></li>
-        <li data-reveal><a class="contact-row" href="https://www.linkedin.com/in/mdtahrimkobirriyad" target="_blank" rel="noopener noreferrer">
-          <span class="contact-icon"><img src="linkedin.png" alt="" width="28" height="28" loading="lazy"></span>
-          <span class="contact-info"><span class="contact-label">LinkedIn</span><span class="contact-value">Md Tahrim Kobir Riyad</span></span></a></li>
-        <li data-reveal><a class="contact-row" href="https://www.researchgate.net/profile/Md-Tahrim-Kobir-Riyad?ev=hdr_xprf" target="_blank" rel="noopener noreferrer">
-          <span class="contact-icon"><img src="researchgate.png" alt="" width="28" height="28" loading="lazy"></span>
-          <span class="contact-info"><span class="contact-label">ResearchGate</span><span class="contact-value">Md Tahrim Kobir Riyad</span></span></a></li>
-        <li data-reveal><a class="contact-row" href="https://orcid.org/0009-0006-5751-8128" target="_blank" rel="noopener noreferrer">
-          <span class="contact-icon"><img src="orcid.png" alt="" width="28" height="28" loading="lazy"></span>
-          <span class="contact-info"><span class="contact-label">ORCID iD</span><span class="contact-value">0009-0006-5751-8128</span></span></a></li>
-      </ul>
-    </div>
-  </section>
+  /* If a photo can't load, say so on the tile instead of leaving it blank. */
+  items.forEach(function (item) {
+    var img = item.querySelector('img'), wrap = item.querySelector('.image-wrapper');
+    if (!img || !wrap) return;
+    var broken = function () { wrap.classList.add('is-broken'); wrap.setAttribute('data-alt', img.alt || 'Image unavailable'); };
+    img.addEventListener('error', broken);
+    if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) broken();
+  });
 
-  </main>
+  var lb = document.getElementById('lightbox');
+  if (lb && items.length) {
+    var lbImg = document.getElementById('lb-img');
+    var lbCap = document.getElementById('lb-caption');
+    var lbClose = lb.querySelector('.lb-close');
+    var lbBtns = Array.prototype.slice.call(lb.querySelectorAll('.lb-btn'));
+    var index = 0, opener = null;
 
-  <footer>
-    <div class="container footer-content">
-      <p>© 2026 <strong>Md Tahrim Kobir Riyad</strong> · <a href="mailto:tahrim.ag@student.sau.ac.bd">tahrim.ag@student.sau.ac.bd</a></p>
-      <div class="footer-links">
-        <a href="https://www.linkedin.com/in/mdtahrimkobirriyad" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile"><img src="linkedin.png" alt="" width="28" height="28" loading="lazy"></a>
-        <a href="mailto:tahrim.ag@student.sau.ac.bd" aria-label="Send an email"><img src="gmail.png" alt="" width="28" height="28" loading="lazy"></a>
-      </div>
-    </div>
-  </footer>
+    var fill = function (i, swap) {
+      index = (i + items.length) % items.length;
+      var img = items[index].querySelector('img');
+      var cap = items[index].querySelector('figcaption');
+      var apply = function () {
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt;
+        lbCap.textContent = cap ? cap.textContent : '';
+        lbImg.classList.remove('is-swapping');
+      };
+      if (swap && !calm) { lbImg.classList.add('is-swapping'); setTimeout(apply, 160); } else apply();
+    };
+    var openLb = function (i, from) {
+      opener = from;
+      fill(i, false);
+      lb.hidden = false;
+      requestAnimationFrame(function () { lb.classList.add('is-open'); });
+      document.body.style.overflow = 'hidden';
+      lbClose.focus();
+    };
+    var closeLb = function () {
+      lb.classList.remove('is-open');
+      var finish = function () { lb.hidden = true; lbImg.removeAttribute('src'); };
+      if (calm) finish(); else setTimeout(finish, 250);
+      document.body.style.overflow = '';
+      if (opener) opener.focus();
+    };
 
-  <a href="#top" class="back-to-top" aria-label="Back to top"><svg class="icon"><use href="#i-up"/></svg></a>
+    items.forEach(function (item, i) {
+      var btn = item.querySelector('.image-wrapper');
+      if (btn) btn.addEventListener('click', function () { if (!btn.classList.contains('is-broken')) openLb(i, btn); });
+    });
+    lbClose.addEventListener('click', closeLb);
+    lb.querySelector('.lb-prev').addEventListener('click', function () { fill(index - 1, true); });
+    lb.querySelector('.lb-next').addEventListener('click', function () { fill(index + 1, true); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
-    <button type="button" class="lb-btn lb-close" aria-label="Close image viewer">&times;</button>
-    <button type="button" class="lb-btn lb-prev" aria-label="Previous image"><svg class="icon"><use href="#i-prev"/></svg></button>
-    <figure class="lb-figure">
-      <img id="lb-img" src="" alt="">
-      <figcaption id="lb-caption"></figcaption>
-    </figure>
-    <button type="button" class="lb-btn lb-next" aria-label="Next image"><svg class="icon"><use href="#i-next"/></svg></button>
-  </div>
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') { closeLb(); return; }
+      if (e.key === 'ArrowLeft') fill(index - 1, true);
+      if (e.key === 'ArrowRight') fill(index + 1, true);
+      if (e.key === 'Tab') {
+        var first = lbBtns[0], last = lbBtns[lbBtns.length - 1];
+        if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+        else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+      }
+    });
 
-  <script src="motion.js"></script>
-</body>
-</html>
+    var x0 = null;                                          // swipe in the lightbox
+    lb.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 50) fill(index + (dx < 0 ? 1 : -1), true);
+      x0 = null;
+    }, { passive: true });
+  }
+})();
