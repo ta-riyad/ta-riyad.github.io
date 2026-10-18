@@ -48,7 +48,7 @@
 
   <a class="skip" href="#main">Skip to content</a>
 
-  <!-- 01. NAVIGATION -->
+  <!-- NAVIGATION (link order matches the page order below) -->
   <header class="navbar">
     <div class="nav-container">
       <a href="#top" class="nav-brand">Tahrim K. Riyad</a>
@@ -56,13 +56,13 @@
       <nav aria-label="Primary">
         <ul class="nav-links" id="navLinks">
           <li><a href="#top">Home</a></li>
-          <li><a href="#research">Research</a></li>
           <li><a href="#experience">Experience</a></li>
+          <li><a href="#research">Research</a></li>
           <li><a href="#conferences">Publications</a></li>
-          <li><a href="#gallery">Fieldwork</a></li>
           <li><a href="#skills">Methods</a></li>
-          <li><a href="#certifications">Certificates</a></li>
+          <li><a href="#gallery">Fieldwork</a></li>
           <li><a href="#affiliations">Community</a></li>
+          <li><a href="#certifications">Certificates</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -70,11 +70,18 @@
   </header>
 
   <main id="main">
-  <!-- 02. HERO -->
+
+  <!-- 1. HERO -->
   <section id="hero" class="hero">
     <div class="container hero-inner">
       <figure class="hero-image">
-        <img src="1000440302.png" alt="Portrait of Md Tahrim Kobir Riyad" class="profile-img" width="680" height="850">
+        <div class="portrait-frame">
+          <img src="1000440302.png" alt="Portrait of Md Tahrim Kobir Riyad" class="profile-img" width="680" height="850">
+        </div>
+        <figcaption class="portrait-plate">
+          <strong>Plant Stress Biology &amp; Computational Genomics</strong>
+          <span>Research Assistant, Sylhet Agricultural University</span>
+        </figcaption>
       </figure>
       <div class="hero-text">
         <p class="hero-affil">Sylhet Agricultural University, Bangladesh</p>
@@ -99,35 +106,8 @@
     </div>
   </section>
 
-  <!-- 03. RESEARCH INTERESTS -->
-  <section id="research" class="section">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Research interests</h2>
-        <p class="section-subtext">Exploring plant resilience through integrated experimental and computational approaches.</p>
-      </div>
-      <div class="cards-grid">
-        <article class="card" data-reveal>
-          <span class="card-icon"><svg class="icon"><use href="#i-leaf"/></svg></span>
-          <h3>Plant Stress Physiology</h3>
-          <p>Designing and conducting seed germination and abiotic stress resilience experiments.</p>
-        </article>
-        <article class="card" data-reveal>
-          <span class="card-icon"><svg class="icon"><use href="#i-dna"/></svg></span>
-          <h3>Molecular Biology</h3>
-          <p>DNA extraction and biochemical assays for antioxidant enzymes and stress markers.</p>
-        </article>
-        <article class="card" data-reveal>
-          <span class="card-icon"><svg class="icon"><use href="#i-code"/></svg></span>
-          <h3>Bioinformatics &amp; Genomics</h3>
-          <p>Genome-wide identification, gene expression profiling, and structural predictions.</p>
-        </article>
-      </div>
-    </div>
-  </section>
 
- 
-<!-- 04. EXPERIENCE & EDUCATION  -->
+  <!-- 2. EXPERIENCE & EDUCATION -->
   <section id="experience" class="section section-alt">
     <div class="container">
       <div class="section-header" data-reveal>
@@ -231,148 +211,242 @@
     </div>
   </section>
 
-    
- <!-- 05. RESEARCH & PUBLICATIONS (replaces the whole <section id="conferences"> block) -->
-<section id="conferences" class="section pubs">
-  <div class="container">
-    <div class="section-header" data-reveal>
-      <h2 data-split>Publications</h2>
-      <p class="section-subtext">Research contributions in plant genomics, gene expression, and abiotic stress physiology, including journal manuscripts and accepted conference abstracts.</p>
+
+  <!-- 3. RESEARCH INTERESTS -->
+  <section id="research" class="section">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <h2 data-split>Research interests</h2>
+        <p class="section-subtext">Exploring plant resilience through integrated experimental and computational approaches.</p>
+      </div>
+      <div class="cards-grid">
+        <article class="card" data-reveal>
+          <span class="card-icon"><svg class="icon"><use href="#i-leaf"/></svg></span>
+          <h3>Plant Stress Physiology</h3>
+          <p>Designing and conducting seed germination and abiotic stress resilience experiments.</p>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-icon"><svg class="icon"><use href="#i-dna"/></svg></span>
+          <h3>Molecular Biology</h3>
+          <p>DNA extraction and biochemical assays for antioxidant enzymes and stress markers.</p>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-icon"><svg class="icon"><use href="#i-code"/></svg></span>
+          <h3>Bioinformatics &amp; Genomics</h3>
+          <p>Genome-wide identification, gene expression profiling, and structural predictions.</p>
+        </article>
+      </div>
     </div>
+  </section>
 
-    <dl class="pubs-summary" data-reveal>
-      <div><dt>Manuscripts submitted</dt><dd>3</dd></div>
-      <div><dt>Posters accepted</dt><dd>3</dd></div>
-      <div><dt>As presenting author</dt><dd>1</dd></div>
-    </dl>
 
-    <!-- JOURNAL MANUSCRIPTS -->
-    <div class="pubs-group">
-      <div class="pubs-group-head" data-reveal>
-        <h3 class="pubs-group-title">Journal manuscripts</h3>
-        <span class="pubs-group-note">Submitted in 2026</span>
+  <!-- 4. PUBLICATIONS -->
+  <section id="conferences" class="section section-alt pubs">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <h2 data-split>Publications</h2>
+        <p class="section-subtext">Research contributions in plant genomics, gene expression, and abiotic stress physiology, including journal manuscripts and accepted conference abstracts.</p>
       </div>
 
-      <div class="pub-list">
+      <dl class="pubs-summary" data-reveal>
+        <div><dt>Manuscripts submitted</dt><dd>3</dd></div>
+        <div><dt>Posters accepted</dt><dd>3</dd></div>
+        <div><dt>As presenting author</dt><dd>1</dd></div>
+      </dl>
 
-        <article class="pub" id="manuscript-1" data-reveal>
-          <div class="pub-rail">
-            <svg class="icon" aria-hidden="true"><use href="#i-dna"/></svg>
-            <span class="pub-ref" aria-label="Manuscript 1">M1</span>
-          </div>
-          <div class="pub-body">
-            <p class="pub-type">Research manuscript in plant genomics and computational biology</p>
-            <h4 class="pub-title">Genome-Wide Identification and Characterization of the Rad5/16-Like Group Chromatin Remodeling Gene Family in <i>Arabidopsis thaliana</i> with Their Developmental, Hormonal, and Stress-Responsive Expression</h4>
+      <!-- JOURNAL MANUSCRIPTS -->
+      <div class="pubs-group">
+        <div class="pubs-group-head" data-reveal>
+          <h3 class="pubs-group-title">Journal manuscripts</h3>
+          <span class="pubs-group-note">Submitted in 2026</span>
+        </div>
+
+        <div class="pub-list">
+
+          <article class="pub" id="manuscript-1" data-reveal>
+            <div class="pub-rail">
+              <svg class="icon" aria-hidden="true"><use href="#i-dna"/></svg>
+              <span class="pub-ref" aria-label="Manuscript 1">M1</span>
+            </div>
+            <div class="pub-body">
+              <p class="pub-type">Research manuscript in plant genomics and computational biology</p>
+              <h4 class="pub-title">Genome-Wide Identification and Characterization of the Rad5/16-Like Group Chromatin Remodeling Gene Family in <i>Arabidopsis thaliana</i> with Their Developmental, Hormonal, and Stress-Responsive Expression</h4>
+              <p class="pub-authors">Tasfiah Jahan, <strong class="me">Md Tahrim Kobir Riyad</strong>, KM Ahbab Zaman Aqib, Md Arifur Rahman, Md Mahdi Hasan Munna, and Md Jahid Hasan Jone</p>
+              <div class="pub-foot">
+                <span class="pub-chip pub-chip-status">Manuscript submitted</span>
+                <span class="pub-chip">Co-author</span>
+                <a class="pub-xref" href="#poster-1">Also presented as poster P1, as presenting author</a>
+              </div>
+              <!-- Add a public preprint link or DOI when available. -->
+            </div>
+          </article>
+
+          <article class="pub" id="manuscript-2" data-reveal>
+            <div class="pub-rail">
+              <svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg>
+              <span class="pub-ref" aria-label="Manuscript 2">M2</span>
+            </div>
+            <div class="pub-body">
+              <p class="pub-type">Research manuscript in plant stress physiology</p>
+              <h4 class="pub-title">Assessing the Growth and Yield Performances of Turnip (<i>Brassica rapa</i> L.) in Response to Salinity Stress Revealed by Morphological, Physiological, and Phytochemical Analyses</h4>
+              <p class="pub-authors">Arifa Rahman, Dr. Sayeda Sultana, Dr. M. Shafi Ullah Bhuiyan, <strong class="me">Md Tahrim Kobir Riyad</strong>, KM Ahbab Zaman Aqib, and Md Arifur Rahman</p>
+              <div class="pub-foot">
+                <span class="pub-chip pub-chip-status">Manuscript submitted</span>
+                <span class="pub-chip">Co-author</span>
+              </div>
+              <!-- Add a public preprint link or DOI when available. -->
+            </div>
+          </article>
+
+          <article class="pub" id="manuscript-3" data-reveal>
+            <div class="pub-rail">
+              <svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg>
+              <span class="pub-ref" aria-label="Manuscript 3">M3</span>
+            </div>
+            <div class="pub-body">
+              <p class="pub-type">Research manuscript in plant stress physiology</p>
+              <h4 class="pub-title">Evaluation of Physiological and Biochemical Responses of Rice Landraces under Salinity Stress</h4>
+              <p class="pub-authors">Md Mahdi Hasan Munna, Tarikul Islam Rasel, Md Monirul Islam, <strong class="me">Md Tahrim Kobir Riyad</strong>, KM Ahbab Zaman Aqib, Md Arifur Rahman, Durjoy Roy, Md Jaoad Al Mobin, SM Toki Emam, and Mozammel Hoque</p>
+              <div class="pub-foot">
+                <span class="pub-chip pub-chip-status">Manuscript submitted</span>
+                <span class="pub-chip">Co-author</span>
+                <a class="pub-xref" href="#poster-3">Also presented as poster P3 by Md Mahdi Hasan Munna</a>
+              </div>
+              <!-- Add a public preprint link or DOI when available. -->
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- CONFERENCE ABSTRACTS -->
+      <div class="pubs-group">
+        <div class="pubs-group-head" data-reveal>
+          <h3 class="pubs-group-title">Accepted conference abstracts</h3>
+        </div>
+
+        <div class="pubs-conf" data-reveal>
+          <h4 class="pubs-conf-name">Fifth International Conference of the Bangladesh Society of Plant Science and Technology (BSPST)</h4>
+          <ul class="pubs-conf-facts">
+            <li>29–31 October 2026</li>
+            <li>Sylhet Agricultural University, Bangladesh</li>
+          </ul>
+        </div>
+
+        <div class="poster-grid">
+
+          <article class="poster is-presenting" id="poster-1" data-reveal style="--i:0">
+            <div class="poster-top">
+              <span class="poster-ref" aria-label="Poster 1">P1</span>
+              <span class="poster-role">Presenting author</span>
+            </div>
+            <h4 class="poster-title">Genome-Wide Identification and Characterization of the Rad5/16 Like Group Chromatin Remodeling Gene Family in <i>Arabidopsis thaliana</i> with Their Developmental, Hormonal, and Stress-Responsive Expression</h4>
             <p class="pub-authors">Tasfiah Jahan, <strong class="me">Md Tahrim Kobir Riyad</strong>, KM Ahbab Zaman Aqib, Md Arifur Rahman, Md Mahdi Hasan Munna, and Md Jahid Hasan Jone</p>
-            <div class="pub-foot">
-              <span class="pub-chip pub-chip-status">Manuscript submitted</span>
-              <span class="pub-chip">Co-author</span>
-              <a class="pub-xref" href="#poster-1">Also presented as poster P1, as presenting author</a>
+            <div class="poster-foot">
+              <span class="pub-chip pub-chip-status">Poster accepted</span>
+              <a class="pub-xref" href="#manuscript-1">Related manuscript M1</a>
             </div>
-            <!-- Add a public preprint link or DOI when available. -->
-          </div>
-        </article>
+          </article>
 
-                <article class="pub" id="manuscript-3" data-reveal>
-          <div class="pub-rail">
-            <svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg>
-            <span class="pub-ref" aria-label="Manuscript 3">M2</span>
-          </div>
-          <div class="pub-body">
-            <p class="pub-type">Research manuscript in plant stress physiology</p>
-            <h4 class="pub-title">Assessing the Growth and Yield Performances of Turnip (<i>Brassica rapa</i> L.) in Response to Salinity Stress Revealed by Morphological, Physiological, and Phytochemical Analyses</h4>
-            <p class="pub-authors">Arifa Rahman, Dr. Sayeda Sultana, Dr. M. Shafi Ullah Bhuiyan, <strong class="me">Md Tahrim Kobir Riyad</strong>, KM Ahbab Zaman Aqib, and Md Arifur Rahman</p>
-            <div class="pub-foot">
-              <span class="pub-chip pub-chip-status">Manuscript submitted</span>
-              <span class="pub-chip">Co-author</span>
+          <article class="poster" id="poster-2" data-reveal style="--i:1">
+            <div class="poster-top">
+              <span class="poster-ref" aria-label="Poster 2">P2</span>
+              <span class="poster-role">Co-author</span>
             </div>
-            <!-- Add a public preprint link or DOI when available. -->
-          </div>
-        </article>
+            <h4 class="poster-title">Expression Dynamics of the Cytochrome B5 Gene Family in <i>Arabidopsis thaliana</i>: Tissue Specificity, Phytohormonal Responsiveness, and Abiotic Stress Responses</h4>
+            <p class="pub-authors">Md Mahdi Hasan Munna, KM Ahbab Zaman Aqib, Md Arifur Rahman, <strong class="me">Md Tahrim Kobir Riyad</strong>, Tasfiah Jahan, and Md Jahid Hasan Jone</p>
+            <div class="poster-foot">
+              <span class="pub-chip pub-chip-status">Poster accepted</span>
+              <span class="poster-presenter">Presenter: KM Ahbab Zaman Aqib</span>
+            </div>
+          </article>
 
-        <article class="pub" id="manuscript-2" data-reveal>
-          <div class="pub-rail">
-            <svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg>
-            <span class="pub-ref" aria-label="Manuscript 2">M3</span>
-          </div>
-          <div class="pub-body">
-            <p class="pub-type">Research manuscript in plant stress physiology</p>
-            <h4 class="pub-title">Evaluation of Physiological and Biochemical Responses of Rice Landraces under Salinity Stress</h4>
+          <article class="poster" id="poster-3" data-reveal style="--i:2">
+            <div class="poster-top">
+              <span class="poster-ref" aria-label="Poster 3">P3</span>
+              <span class="poster-role">Co-author</span>
+            </div>
+            <h4 class="poster-title">Evaluation of Physiological and Biochemical Response of Rice Landraces under Salinity Stress</h4>
             <p class="pub-authors">Md Mahdi Hasan Munna, Tarikul Islam Rasel, Md Monirul Islam, <strong class="me">Md Tahrim Kobir Riyad</strong>, KM Ahbab Zaman Aqib, Md Arifur Rahman, Durjoy Roy, Md Jaoad Al Mobin, SM Toki Emam, and Mozammel Hoque</p>
-            <div class="pub-foot">
-              <span class="pub-chip pub-chip-status">Manuscript submitted</span>
-              <span class="pub-chip">Co-author</span>
-              <a class="pub-xref" href="#poster-3">Also presented as poster P3 by Md Mahdi Hasan Munna</a>
+            <div class="poster-foot">
+              <span class="pub-chip pub-chip-status">Poster accepted</span>
+              <span class="poster-presenter">Presenter: Md Mahdi Hasan Munna</span>
+              <a class="pub-xref" href="#manuscript-3">Related manuscript M3</a>
             </div>
-            <!-- Add a public preprint link or DOI when available. -->
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 5. METHODS & TOOLS -->
+  <section id="skills" class="section">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <h2 data-split>Research Methods &amp; Tools</h2>
+      </div>
+
+      <div class="skills-grid">
+
+        <!-- Laboratory & Plant Physiology -->
+        <article class="card skill-group" data-reveal>
+          <h3>Laboratory &amp; Plant Physiology</h3>
+          <div class="tags">
+            <span class="tag">Seed Germination</span>
+            <span class="tag">Abiotic Stress Experiments</span>
+            <span class="tag">Plant Physiological Measurements</span>
+            <span class="tag">Biochemical Assays</span>
+            <span class="tag">Antioxidant Activity Assays</span>
+            <span class="tag">UV–Vis Spectrophotometry</span>
+          </div>
+        </article>
+
+        <!-- Genomics & Bioinformatics -->
+        <article class="card skill-group" data-reveal>
+          <h3>Genomics &amp; Bioinformatics</h3>
+          <div class="tags">
+            <span class="tag">Gene Family Identification</span>
+            <span class="tag">Functional Annotation</span>
+            <span class="tag">Gene Expression Analysis</span>
+            <span class="tag">Phylogenetic Analysis</span>
+            <span class="tag">Genomic Mining</span>
+            <span class="tag">Protein Structure Prediction</span>
+          </div>
+        </article>
+
+        <!-- Software & Databases -->
+        <article class="card skill-group" data-reveal>
+          <h3>Software &amp; Databases</h3>
+          <div class="tags">
+            <span class="tag">R</span>
+            <span class="tag">Python</span>
+            <span class="tag">NCBI / BLAST</span>
+            <span class="tag">TAIR</span>
+            <span class="tag">Phytozome</span>
+            <span class="tag">MEGA</span>
+            <span class="tag">PhyloSuite</span>
+            <span class="tag">TBtools</span>
+            <span class="tag">MEME Suite</span>
+            <span class="tag">AlphaFold</span>
+          </div>
+        </article>
+
+        <!-- Molecular Biology -->
+        <article class="card skill-group" data-reveal>
+          <h3>Molecular Biology</h3>
+          <div class="tags">
+            <span class="tag">DNA Extraction</span>
           </div>
         </article>
 
       </div>
     </div>
+  </section>
 
-    <!-- CONFERENCE ABSTRACTS -->
-    <div class="pubs-group">
-      <div class="pubs-group-head" data-reveal>
-        <h3 class="pubs-group-title">Accepted conference abstracts</h3>
-      </div>
 
-      <div class="pubs-conf" data-reveal>
-        <h4 class="pubs-conf-name">Fifth International Conference of the Bangladesh Society of Plant Science and Technology (BSPST)</h4>
-        <ul class="pubs-conf-facts">
-          <li>29–31 October 2026</li>
-          <li>Sylhet Agricultural University, Bangladesh</li>
-        </ul>
-      </div>
-
-      <div class="poster-grid">
-
-        <article class="poster is-presenting" id="poster-1" data-reveal style="--i:0">
-          <div class="poster-top">
-            <span class="poster-ref" aria-label="Poster 1">P1</span>
-            <span class="poster-role">Presenting author</span>
-          </div>
-          <h4 class="poster-title">Genome-Wide Identification and Characterization of the Rad5/16 Like Group Chromatin Remodeling Gene Family in <i>Arabidopsis thaliana</i> with Their Developmental, Hormonal, and Stress-Responsive Expression</h4>
-          <p class="pub-authors">Tasfiah Jahan, <strong class="me">Md Tahrim Kobir Riyad</strong>, KM Ahbab Zaman Aqib, Md Arifur Rahman, Md Mahdi Hasan Munna, and Md Jahid Hasan Jone</p>
-          <div class="poster-foot">
-            <span class="pub-chip pub-chip-status">Poster accepted</span>
-            <a class="pub-xref" href="#manuscript-1">Related manuscript M1</a>
-          </div>
-        </article>
-
-        <article class="poster" id="poster-2" data-reveal style="--i:1">
-          <div class="poster-top">
-            <span class="poster-ref" aria-label="Poster 2">P2</span>
-            <span class="poster-role">Co-author</span>
-          </div>
-          <h4 class="poster-title">Expression Dynamics of the Cytochrome B5 Gene Family in <i>Arabidopsis thaliana</i>: Tissue Specificity, Phytohormonal Responsiveness, and Abiotic Stress Responses</h4>
-          <p class="pub-authors">Md Mahdi Hasan Munna, KM Ahbab Zaman Aqib, Md Arifur Rahman, <strong class="me">Md Tahrim Kobir Riyad</strong>, Tasfiah Jahan, and Md Jahid Hasan Jone</p>
-          <div class="poster-foot">
-            <span class="pub-chip pub-chip-status">Poster accepted</span>
-            <span class="poster-presenter">Presenter: KM Ahbab Zaman Aqib</span>
-          </div>
-        </article>
-
-        <article class="poster" id="poster-3" data-reveal style="--i:2">
-          <div class="poster-top">
-            <span class="poster-ref" aria-label="Poster 3">P3</span>
-            <span class="poster-role">Co-author</span>
-          </div>
-          <h4 class="poster-title">Evaluation of Physiological and Biochemical Response of Rice Landraces under Salinity Stress</h4>
-          <p class="pub-authors">Md Mahdi Hasan Munna, Tarikul Islam Rasel, Md Monirul Islam, <strong class="me">Md Tahrim Kobir Riyad</strong>, KM Ahbab Zaman Aqib, Md Arifur Rahman, Durjoy Roy, Md Jaoad Al Mobin, SM Toki Emam, and Mozammel Hoque</p>
-          <div class="poster-foot">
-            <span class="pub-chip pub-chip-status">Poster accepted</span>
-            <span class="poster-presenter">Presenter: Md Mahdi Hasan Munna</span>
-            <a class="pub-xref" href="#manuscript-2">Related manuscript M2</a>
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-  <!-- 06. FIELD & LABORATORY (GALLERY) -->
+  <!-- 6. FIELD & LABORATORY (GALLERY) -->
   <section id="gallery" class="section section-alt">
     <div class="container">
       <div class="section-header" data-reveal>
@@ -408,115 +482,8 @@
     </div>
   </section>
 
- 
-<!-- 07. METHODS & TOOLS -->
-<section id="skills" class="section">
-  <div class="container">
-    <div class="section-header" data-reveal>
-      <h2 data-split>Research Methods &amp; Tools</h2>
-    </div>
 
-    <div class="skills-grid">
-
-      <!-- Laboratory & Plant Physiology -->
-      <article class="card skill-group" data-reveal>
-        <h3>Laboratory &amp; Plant Physiology</h3>
-        <div class="tags">
-          <span class="tag">Seed Germination</span>
-          <span class="tag">Abiotic Stress Experiments</span>
-          <span class="tag">Plant Physiological Measurements</span>
-          <span class="tag">Biochemical Assays</span>
-          <span class="tag">Antioxidant Activity Assays</span>
-          <span class="tag">UV–Vis Spectrophotometry</span>
-        </div>
-      </article>
-
-      <!-- Genomics & Bioinformatics -->
-      <article class="card skill-group" data-reveal>
-        <h3>Genomics &amp; Bioinformatics</h3>
-        <div class="tags">
-          <span class="tag">Gene Family Identification</span>
-          <span class="tag">Functional Annotation</span>
-          <span class="tag">Gene Expression Analysis</span>
-          <span class="tag">Phylogenetic Analysis</span>
-          <span class="tag">Genomic Mining</span>
-          <span class="tag">Protein Structure Prediction</span>
-        </div>
-      </article>
-
-      <!-- Software & Databases -->
-      <article class="card skill-group" data-reveal>
-        <h3>Software &amp; Databases</h3>
-        <div class="tags">
-          <span class="tag">R</span>
-          <span class="tag">Python</span>
-          <span class="tag">NCBI / BLAST</span>
-          <span class="tag">TAIR</span>
-          <span class="tag">Phytozome</span>
-          <span class="tag">MEGA</span>
-          <span class="tag">PhyloSuite</span>
-          <span class="tag">TBtools</span>
-          <span class="tag">MEME Suite</span>
-          <span class="tag">AlphaFold</span>
-        </div>
-      </article>
-
-      <!-- Molecular Biology -->
-      <article class="card skill-group" data-reveal>
-        <h3>Molecular Biology</h3>
-        <div class="tags">
-          <span class="tag">DNA Extraction</span>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-  <!-- 08. CERTIFICATIONS -->
-  <section id="certifications" class="section section-alt">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 data-split>Certifications</h2>
-        <p class="section-subtext">Completed online and short courses. Each entry opens the issuer's verification page.</p>
-      </div>
-
-      <div class="cert-groups">
-        <div class="cert-group" data-reveal>
-          <h3>Bioinformatics &amp; Genomics</h3>
-          <ul class="cert-list">
-            <li><a href="https://coursera.org/verify/specialization/HGBR5II0ZXTR" target="_blank" rel="noopener noreferrer"><img src="toronto.png" alt="University of Toronto" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Plant Bioinformatics Methods Specialization</span><span class="cert-org">University of Toronto</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://coursera.org/verify/MF1DCKLEVWN6" target="_blank" rel="noopener noreferrer"><img src="peking.png" alt="Peking University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Bioinformatics: Introduction and Methods</span><span class="cert-org">Peking University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://coursera.org/verify/Q7SYCHYGGV32" target="_blank" rel="noopener noreferrer"><img src="melbourn.png" alt="University of Melbourne" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Epigenetic Control of Gene Expression</span><span class="cert-org">University of Melbourne</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://coursera.org/verify/0VITF6QO0DKA" target="_blank" rel="noopener noreferrer"><img src="jons%20hop.png" alt="Johns Hopkins University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Python for Genomic Data Science</span><span class="cert-org">Johns Hopkins University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-          </ul>
-        </div>
-
-        <div class="cert-group" data-reveal>
-          <h3>Plant Science &amp; Agriculture</h3>
-          <ul class="cert-list">
-            <li><a href="https://coursera.org/verify/2HH0FH8TCZOW" target="_blank" rel="noopener noreferrer"><img src="western%20aus.png" alt="University of Western Australia" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Agriculture, Economics and Nature</span><span class="cert-org">University of Western Australia</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/verify/U71E94TLLWNG" target="_blank" rel="noopener noreferrer"><img src="florida.png" alt="University of Florida" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Sustainable Agricultural Land Management</span><span class="cert-org">University of Florida</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/verify/YIW4VE21AW97" target="_blank" rel="noopener noreferrer"><img src="tel%20aviv.png" alt="Tel Aviv University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Understanding Plants – Part I</span><span class="cert-org">Tel Aviv University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/verify/7F1EX5JGEYSR" target="_blank" rel="noopener noreferrer"><img src="copen.png" alt="University of Copenhagen" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Transformation of the Global Food System</span><span class="cert-org">University of Copenhagen</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://academy.cabi.org/mod/customcert/verify_certificate.php?code=I40VVTRWMD&amp;qrcode=1" target="_blank" rel="noopener noreferrer"><img src="CABI.png" alt="CABI" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Integrated Pest Management (IPM) Fundamentals</span><span class="cert-org">CABI Academy</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-          </ul>
-        </div>
-
-        <div class="cert-group" data-reveal>
-          <h3>Data Science &amp; Programming</h3>
-          <ul class="cert-list">
-            <li><a href="https://certificates.cs50.io/eab072f5-d643-4126-bee1-c4f595328223.pdf?size=letter" target="_blank" rel="noopener noreferrer"><img src="harvard.png" alt="Harvard University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">CS50's Introduction to Programming with Python</span><span class="cert-org">Harvard University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://coursera.org/verify/specialization/7M0WBO119F3P" target="_blank" rel="noopener noreferrer"><img src="duke.png" alt="Duke University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Data Analysis with R Specialization</span><span class="cert-org">Duke University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/certificate/USCDNT8QWXCT" target="_blank" rel="noopener noreferrer"><img src="michigan.png" alt="University of Michigan" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Applied Machine Learning in Python</span><span class="cert-org">University of Michigan</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-            <li><a href="https://www.coursera.org/account/accomplishments/verify/15VKXLRCIYAI" target="_blank" rel="noopener noreferrer"><img src="IBM.png" alt="IBM" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Python for Data Science, AI &amp; Development</span><span class="cert-org">IBM</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 09. AFFILIATIONS & LEADERSHIP -->
+  <!-- 7. AFFILIATIONS & LEADERSHIP -->
   <section id="affiliations" class="section">
     <div class="container">
       <div class="section-header" data-reveal>
@@ -574,7 +541,52 @@
     </div>
   </section>
 
-  <!-- 10. CONTACT -->
+
+  <!-- 8. CERTIFICATIONS -->
+  <section id="certifications" class="section section-alt">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <h2 data-split>Certifications</h2>
+        <p class="section-subtext">Completed online and short courses. Each entry opens the issuer's verification page.</p>
+      </div>
+
+      <div class="cert-groups">
+        <div class="cert-group" data-reveal>
+          <h3>Bioinformatics &amp; Genomics</h3>
+          <ul class="cert-list">
+            <li><a href="https://coursera.org/verify/specialization/HGBR5II0ZXTR" target="_blank" rel="noopener noreferrer"><img src="toronto.png" alt="University of Toronto" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Plant Bioinformatics Methods Specialization</span><span class="cert-org">University of Toronto</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://coursera.org/verify/MF1DCKLEVWN6" target="_blank" rel="noopener noreferrer"><img src="peking.png" alt="Peking University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Bioinformatics: Introduction and Methods</span><span class="cert-org">Peking University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://coursera.org/verify/Q7SYCHYGGV32" target="_blank" rel="noopener noreferrer"><img src="melbourn.png" alt="University of Melbourne" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Epigenetic Control of Gene Expression</span><span class="cert-org">University of Melbourne</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://coursera.org/verify/0VITF6QO0DKA" target="_blank" rel="noopener noreferrer"><img src="jons%20hop.png" alt="Johns Hopkins University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Python for Genomic Data Science</span><span class="cert-org">Johns Hopkins University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+          </ul>
+        </div>
+
+        <div class="cert-group" data-reveal>
+          <h3>Plant Science &amp; Agriculture</h3>
+          <ul class="cert-list">
+            <li><a href="https://coursera.org/verify/2HH0FH8TCZOW" target="_blank" rel="noopener noreferrer"><img src="western%20aus.png" alt="University of Western Australia" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Agriculture, Economics and Nature</span><span class="cert-org">University of Western Australia</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://www.coursera.org/account/accomplishments/verify/U71E94TLLWNG" target="_blank" rel="noopener noreferrer"><img src="florida.png" alt="University of Florida" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Sustainable Agricultural Land Management</span><span class="cert-org">University of Florida</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://www.coursera.org/account/accomplishments/verify/YIW4VE21AW97" target="_blank" rel="noopener noreferrer"><img src="tel%20aviv.png" alt="Tel Aviv University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Understanding Plants – Part I</span><span class="cert-org">Tel Aviv University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://www.coursera.org/account/accomplishments/verify/7F1EX5JGEYSR" target="_blank" rel="noopener noreferrer"><img src="copen.png" alt="University of Copenhagen" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Transformation of the Global Food System</span><span class="cert-org">University of Copenhagen</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://academy.cabi.org/mod/customcert/verify_certificate.php?code=I40VVTRWMD&amp;qrcode=1" target="_blank" rel="noopener noreferrer"><img src="CABI.png" alt="CABI" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Integrated Pest Management (IPM) Fundamentals</span><span class="cert-org">CABI Academy</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+          </ul>
+        </div>
+
+        <div class="cert-group" data-reveal>
+          <h3>Data Science &amp; Programming</h3>
+          <ul class="cert-list">
+            <li><a href="https://certificates.cs50.io/eab072f5-d643-4126-bee1-c4f595328223.pdf?size=letter" target="_blank" rel="noopener noreferrer"><img src="harvard.png" alt="Harvard University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">CS50's Introduction to Programming with Python</span><span class="cert-org">Harvard University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://coursera.org/verify/specialization/7M0WBO119F3P" target="_blank" rel="noopener noreferrer"><img src="duke.png" alt="Duke University" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Data Analysis with R Specialization</span><span class="cert-org">Duke University</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://www.coursera.org/account/accomplishments/certificate/USCDNT8QWXCT" target="_blank" rel="noopener noreferrer"><img src="michigan.png" alt="University of Michigan" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Applied Machine Learning in Python</span><span class="cert-org">University of Michigan</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+            <li><a href="https://www.coursera.org/account/accomplishments/verify/15VKXLRCIYAI" target="_blank" rel="noopener noreferrer"><img src="IBM.png" alt="IBM" class="logo" width="48" height="48" loading="lazy"><span class="cert-text"><span class="cert-name">Python for Data Science, AI &amp; Development</span><span class="cert-org">IBM</span></span><svg class="icon icon-sm ext"><use href="#i-ext"/></svg></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 9. CONTACT -->
   <section id="contact" class="section contact-section">
     <div class="container">
       <div class="section-header" data-reveal>
