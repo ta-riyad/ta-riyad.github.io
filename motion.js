@@ -226,8 +226,12 @@
     if (collapsed.addEventListener) collapsed.addEventListener('change', function () { setMenu(false); });
   }
 
-  /* ---------- Pointer touches (fine pointers, motion allowed) ---------- */
-   /* ---------- Pointer touches (fine pointers, motion allowed) ---------- */
+
+
+
+
+   
+     /* ---------- Pointer touches (fine pointers, motion allowed) ---------- */
   if (fine && !calm) {
     /* Soft light that follows the cursor across cards */
     document.querySelectorAll('.card').forEach(function (card) {
@@ -257,31 +261,6 @@
         btn.style.setProperty('--ty', '0px');
       });
     });
-  }
-
-
-    /* Hero portrait tilts in 3D toward the cursor and a soft sheen follows it.
-       style.css turns these four variables into the actual transforms; when the
-       pointer leaves, removing them returns the photo to its resting tilt. */
-    var portrait = document.querySelector('.hero-image');
-    if (portrait) {
-      portrait.addEventListener('pointermove', function (e) {
-        var r = portrait.getBoundingClientRect();
-        var px = (e.clientX - r.left) / r.width;
-        var py = (e.clientY - r.top) / r.height;
-        portrait.classList.add('is-tilting');
-        portrait.style.setProperty('--ry', ((px - 0.5) * 28).toFixed(1) + 'deg');
-        portrait.style.setProperty('--rx', ((0.5 - py) * 18).toFixed(1) + 'deg');
-        portrait.style.setProperty('--gx', (px * 100).toFixed(0) + '%');
-        portrait.style.setProperty('--gy', (py * 100).toFixed(0) + '%');
-      });
-      portrait.addEventListener('pointerleave', function () {
-        portrait.classList.remove('is-tilting');
-        ['--rx', '--ry', '--gx', '--gy'].forEach(function (name) {
-          portrait.style.removeProperty(name);
-        });
-      });
-    }
   }
 
   /* ---------- Stat count-up ---------- */
