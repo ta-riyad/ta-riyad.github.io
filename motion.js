@@ -227,6 +227,7 @@
   }
 
   /* ---------- Pointer touches (fine pointers, motion allowed) ---------- */
+   /* ---------- Pointer touches (fine pointers, motion allowed) ---------- */
   if (fine && !calm) {
     /* Soft light that follows the cursor across cards */
     document.querySelectorAll('.card').forEach(function (card) {
@@ -256,6 +257,8 @@
         btn.style.setProperty('--ty', '0px');
       });
     });
+  }
+
 
     /* Hero portrait tilts in 3D toward the cursor and a soft sheen follows it.
        style.css turns these four variables into the actual transforms; when the
