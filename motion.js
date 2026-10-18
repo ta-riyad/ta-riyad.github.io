@@ -142,8 +142,10 @@
 
     /* Slides the pill under a link (sideways on desktop, up/down in the mobile menu).
        Uses offset* values so it stays accurate while menu items are still animating in.
-       The first time it appears it fades in at the target instead of flying across. */
+       The first time it appears it fades in at the target instead of flying across.
+       The link that sits on the pill gets .is-lit so its text turns white on the ocean blue. */
     var moveTo = function (link) {
+      navItems.forEach(function (a) { a.classList.toggle('is-lit', a === link); });
       if (!link) { pill.classList.remove('is-on'); return; }
       var appearing = !pill.classList.contains('is-on');
       if (appearing) pill.style.transition = 'opacity 320ms ease';
@@ -179,6 +181,15 @@
         link.addEventListener('pointerenter', function () { moveTo(link); });
       });
       navList.addEventListener('pointerleave', function () { moveTo(current); });
+
+      /* Soft blue light on the nav track that follows the cursor (see .nav-links::before) */
+      if (!calm) {
+        navList.addEventListener('pointermove', function (e) {
+          var r = navList.getBoundingClientRect();
+          navList.style.setProperty('--gx', (e.clientX - r.left).toFixed(0) + 'px');
+          navList.style.setProperty('--gy', (e.clientY - r.top).toFixed(0) + 'px');
+        });
+      }
     }
     /* Keyboard users get the same glide as they tab through the links */
     navItems.forEach(function (link) {
@@ -190,19 +201,23 @@
     });
 
     /* Scroll-spy: the section crossing a line 40% down the screen is the current one.
-       Runs on every scroll frame, so it also works on phones and for fast flicks. */
-    var sections = Object.keys(byId).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+       Runs on every scroll frame, so it also works on phones and for fast flicks.
+       "Home" (#top) is matched to the hero section, because #top itself is the whole <body>. */
+    var spyTargets = Object.keys(byId).map(function (id) {
+      var el = id === 'top' ? document.getElementById('hero') : document.getElementById(id);
+      return el ? { el: el, link: byId[id] } : null;
+    }).filter(Boolean);
     var spyQueued = false;
     var spyUpdate = function () {
       spyQueued = false;
       if (spyLocked) return;
       var line = window.innerHeight * 0.4, match = null;
-      for (var i = 0; i < sections.length; i++) {
-        var r = sections[i].getBoundingClientRect();
-        if (r.top <= line && r.bottom > line) { match = byId[sections[i].id]; break; }
+      for (var i = 0; i < spyTargets.length; i++) {
+        var r = spyTargets[i].el.getBoundingClientRect();
+        if (r.top <= line && r.bottom > line) { match = spyTargets[i].link; break; }
       }
-      if (!match && sections.length && window.scrollY + window.innerHeight >= root.scrollHeight - 2) {
-        match = byId[sections[sections.length - 1].id];   // very bottom of the page
+      if (!match && spyTargets.length && window.scrollY + window.innerHeight >= root.scrollHeight - 2) {
+        match = spyTargets[spyTargets.length - 1].link;   // very bottom of the page
       }
       if (match === current) return;
       current = match;
