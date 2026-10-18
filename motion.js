@@ -140,17 +140,17 @@
     navList.appendChild(pill);
     var current = null;
 
-    /* Slides the pill under a link. The first time it appears (or re-appears after hiding)
-       it fades in at the target instead of flying across from the left edge. */
+    /* Slides the pill under a link (sideways on desktop, up/down in the mobile menu).
+       Uses offset* values so it stays accurate while menu items are still animating in.
+       The first time it appears it fades in at the target instead of flying across. */
     var moveTo = function (link) {
-      if (!link || collapsed.matches) { pill.classList.remove('is-on'); return; }
-      var r = link.getBoundingClientRect();
-      var p = navList.getBoundingClientRect();
+      if (!link) { pill.classList.remove('is-on'); return; }
       var appearing = !pill.classList.contains('is-on');
       if (appearing) pill.style.transition = 'opacity 320ms ease';
-      pill.style.setProperty('--x', Math.round(r.left - p.left) + 'px');
-      pill.style.setProperty('--w', Math.round(r.width) + 'px');
-      pill.style.setProperty('--h', Math.round(r.height) + 'px');
+      pill.style.setProperty('--x', link.offsetLeft + 'px');
+      pill.style.setProperty('--y', link.offsetTop + 'px');
+      pill.style.setProperty('--w', link.offsetWidth + 'px');
+      pill.style.setProperty('--h', link.offsetHeight + 'px');
       pill.classList.add('is-on');
       if (appearing) {
         void pill.offsetWidth;                                   // commit the jump before motion returns
@@ -189,24 +189,32 @@
       moveTo(current);
     });
 
-    var watched = Object.keys(byId).map(function (id) { return document.getElementById(id); }).filter(Boolean);
-    var hero = document.getElementById('hero');
-    if (hero) watched.push(hero);
-
-    if (hasIO && watched.length) {
-      var spy = new IntersectionObserver(function (entries) {
-        if (spyLocked) return;
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          var match = byId[entry.target.id] || null;      // hero → no highlight
-          if (match === current) return;
-          current = match;
-          setCurrent(current);
-          moveTo(current);
-        });
-      }, { rootMargin: '-45% 0px -50% 0px' });
-      watched.forEach(function (s) { spy.observe(s); });
-    }
+    /* Scroll-spy: the section crossing a line 40% down the screen is the current one.
+       Runs on every scroll frame, so it also works on phones and for fast flicks. */
+    var sections = Object.keys(byId).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    var spyQueued = false;
+    var spyUpdate = function () {
+      spyQueued = false;
+      if (spyLocked) return;
+      var line = window.innerHeight * 0.4, match = null;
+      for (var i = 0; i < sections.length; i++) {
+        var r = sections[i].getBoundingClientRect();
+        if (r.top <= line && r.bottom > line) { match = byId[sections[i].id]; break; }
+      }
+      if (!match && sections.length && window.scrollY + window.innerHeight >= root.scrollHeight - 2) {
+        match = byId[sections[sections.length - 1].id];   // very bottom of the page
+      }
+      if (match === current) return;
+      current = match;
+      setCurrent(current);
+      moveTo(current);
+    };
+    window.addEventListener('scroll', function () {
+      if (spyQueued) return;
+      spyQueued = true;
+      requestAnimationFrame(spyUpdate);
+    }, { passive: true });
+    spyUpdate();
   }
 
   /* ---------- Mobile menu ---------- */
@@ -226,12 +234,7 @@
     if (collapsed.addEventListener) collapsed.addEventListener('change', function () { setMenu(false); });
   }
 
-
-
-
-
-   
-     /* ---------- Pointer touches (fine pointers, motion allowed) ---------- */
+  /* ---------- Pointer touches (fine pointers, motion allowed) ---------- */
   if (fine && !calm) {
     /* Soft light that follows the cursor across cards */
     document.querySelectorAll('.card').forEach(function (card) {
