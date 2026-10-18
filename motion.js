@@ -267,6 +267,35 @@
       });
     });
 
+    /* Hero portrait: tilts toward the cursor, lifts, and a soft light follows the pointer */
+    var portrait = document.querySelector('.hero-image');
+    var tilt = portrait && portrait.querySelector('.tilt');
+    if (tilt) {
+      var pq = false, pe = null;
+      portrait.addEventListener('pointermove', function (e) {
+        pe = e;
+        if (pq) return;
+        pq = true;
+        requestAnimationFrame(function () {
+          var r = portrait.getBoundingClientRect();
+          var px = (pe.clientX - r.left) / r.width, py = (pe.clientY - r.top) / r.height;
+          tilt.classList.add('is-tracking');
+          tilt.style.setProperty('--ry', ((px - 0.5) * 12).toFixed(2) + 'deg');
+          tilt.style.setProperty('--rx', ((0.5 - py) * 10).toFixed(2) + 'deg');
+          tilt.style.setProperty('--sc', '1.02');
+          tilt.style.setProperty('--gx', (px * 100).toFixed(1) + '%');
+          tilt.style.setProperty('--gy', (py * 100).toFixed(1) + '%');
+          pq = false;
+        });
+      });
+      portrait.addEventListener('pointerleave', function () {
+        tilt.classList.remove('is-tracking');
+        tilt.style.setProperty('--ry', '0deg');
+        tilt.style.setProperty('--rx', '0deg');
+        tilt.style.setProperty('--sc', '1');
+      });
+    }
+
     /* Buttons lean a few pixels toward the cursor */
     document.querySelectorAll('.btn').forEach(function (btn) {
       btn.addEventListener('pointermove', function (e) {
