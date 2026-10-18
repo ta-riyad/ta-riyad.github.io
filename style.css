@@ -6,7 +6,7 @@
     0  Tokens & base ........ colours, sizes, resets, layout helpers
     1  Reveal ............... scroll-in animations (set up by motion.js)
     2  Navbar ............... top bar, gliding pill, mobile menu button
-    3  Hero ................. intro, 3D portrait, summary figures
+    3  Hero ................. intro, portrait, summary figures
     4  Shared parts ......... buttons, cards, tags, logos, links
     5  Experience & Education timeline
     6  Gallery & lightbox ... Field & laboratory work
@@ -147,12 +147,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .nav-brand { padding-bottom: 2px; font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; color: var(--navy); white-space: nowrap; background: linear-gradient(var(--sky), var(--sky)) 0 100% / 0 2px no-repeat; transition: background-size 380ms var(--ease); }
 .nav-brand:hover { background-size: 100% 2px; }
 
-/* Links sit in a soft track. One white pill glides between them with a slight spring and presses in on click. */
+/* Links sit in a soft track. One sky pill glides between them with a slight spring and presses in on click. */
 .nav-links { display: flex; align-items: center; position: relative; padding: 4px; background: var(--mist); border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); }
 .nav-links a { position: relative; z-index: 1; display: block; padding: .5rem clamp(.55rem, .9vw, .9rem); font-size: var(--fs-sm); font-weight: 500; color: var(--muted); border-radius: 999px; transition: color var(--t-base), scale 200ms var(--ease); }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--navy); }
 .nav-links a:active { scale: .95; }
-.nav-indicator { position: absolute; top: 50%; left: 0; z-index: 0; height: var(--h, 34px); width: var(--w, 0); border-radius: 999px; background: #fff; box-shadow: 0 1px 2px rgba(16,48,74,.14), 0 6px 14px -6px rgba(16,48,74,.3); transform: translate3d(var(--x, 0), -50%, 0); opacity: 0; pointer-events: none; transition: transform 520ms var(--spring), width 520ms var(--spring), scale 200ms var(--ease), opacity var(--t-base); }
+.nav-indicator { position: absolute; top: 50%; left: 0; z-index: 0; height: var(--h, 34px); width: var(--w, 0); border-radius: 999px; background: var(--sky); box-shadow: 0 1px 2px rgba(16,48,74,.14), 0 6px 14px -6px rgba(16,48,74,.3); transform: translate3d(var(--x, 0), -50%, 0); opacity: 0; pointer-events: none; transition: transform 520ms var(--spring), width 520ms var(--spring), scale 200ms var(--ease), opacity var(--t-base); }
 .nav-indicator.is-on { opacity: 1; }
 .nav-links:has(a:active) .nav-indicator { scale: .94; }
 
@@ -163,8 +163,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-
-/* ---------- 3. Hero (left-aligned, light, 3D portrait) ---------- */
 
 /* ---------- 3. Hero (left-aligned, light, simple portrait) ---------- */
 
@@ -403,11 +401,11 @@ footer { padding: var(--s-4) 0; background: var(--navy-deep); color: rgba(255,25
 
 /* ---------- 12. Responsive (keep NAV_COLLAPSE in motion.js = 1000) ---------- */
 
-/* Up to 1000px: nav links become a dropdown menu */
+/* Up to 1000px: nav links become a dropdown menu; the pill slides up/down inside it */
 @media (max-width: 1000px) {
   .nav-container { gap: 0; }
   .nav-toggle { display: flex; margin-left: auto; margin-right: -12px; }
-  .nav-indicator { display: none; }
+  .nav-indicator { top: 0; left: 0; background: var(--sky-soft); box-shadow: none; transform: translate3d(var(--x, 0), var(--y, 0), 0); }
   .nav-links { position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; padding: var(--s-2) var(--s-3) var(--s-3); background: var(--white); border-radius: 0; box-shadow: inset 0 1px 0 var(--line), 0 20px 30px -16px rgba(27,71,105,.2);
     visibility: hidden; opacity: 0; transform: translateY(-8px); pointer-events: none;
     transition: opacity 260ms var(--ease), transform 360ms var(--ease), visibility 0s linear 360ms; }
@@ -416,7 +414,7 @@ footer { padding: var(--s-4) 0; background: var(--navy-deep); color: rgba(255,25
   .nav-links.open a { opacity: 1; transform: none; transition-delay: calc(var(--k, 0) * 30ms + 60ms), calc(var(--k, 0) * 30ms + 60ms), 0s, 0s, 0s; }
   .nav-links li:nth-child(2) { --k: 1; } .nav-links li:nth-child(3) { --k: 2; } .nav-links li:nth-child(4) { --k: 3; }
   .nav-links li:nth-child(5) { --k: 4; } .nav-links li:nth-child(6) { --k: 5; } .nav-links li:nth-child(7) { --k: 6; } .nav-links li:nth-child(8) { --k: 7; }
-  .nav-links a[aria-current="page"] { background: var(--sky-soft); color: var(--navy); }
+  .nav-links a[aria-current="page"] { color: var(--navy); }
 }
 
 /* Up to 820px: portrait above text, 2-column gallery and stats, compact lightbox */
